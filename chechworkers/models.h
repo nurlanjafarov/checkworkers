@@ -1,31 +1,27 @@
 #pragma once
 #pragma warning(disable: 4996)
 #include <iostream>
-#include <cstring>
-
 using namespace std;
 
-struct Employee {
-    int kod;
-    char ad[50];
-    char soyad[50];
-    int yas;
-    char seher[50];
-    char nomre[50];
-    float maas;
+struct Worker {
+    int id;
+    char name[50];
+    char surname[50];
+    int age;
+    char city[50];
+    char phone[50];
+    float salary;
 };
-
-struct Muessise {
-    int kod;
-    char ad[100];
-    char unvan[100];
-    Employee* heyat;
-    size_t sayi;
+struct Company {
+    int id;
+    char name[100];
+    char address[100];
+    Worker* workers;
+    size_t size;
 };
-
-void strCopy(char* dst, const char* src);
-Employee* buildStaff(size_t count);
-Muessise* buildCompany(Employee* staff, size_t count);
-void printStaff(Employee* staff, size_t count);
-void filterBySalary(Employee* staff, size_t count, float limit);
-void filterByOperator(Employee* staff, size_t count);
+void m_strcpy(char* hara, const char* haradan);
+Worker* createWorkers(size_t say);
+Company* createCompany(Worker* isciler, size_t say);
+void showWorkers(Worker* isciler, size_t say);
+void salaryGreaterThan(Worker* isciler, size_t say, float limitMaas);
+void checkNarPhoneNumber(Worker* isciler, size_t say);
