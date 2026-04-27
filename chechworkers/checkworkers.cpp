@@ -1,108 +1,92 @@
 #include <iostream>
 #include "models.h"
-
 using namespace std;
-
-void strCopy(char* dst, const char* src) {
+void m_strcpy(char* hara, const char* haradan) {
     int i = 0;
-    while (src[i] != '\0') {
-        dst[i] = src[i];
+    while (haradan[i] != '\0') {
+        hara[i] = haradan[i];
         i++;
     }
-    dst[i] = '\0';
+    hara[i] = '\0';
 }
-
-Employee* buildStaff(size_t count) {
-    Employee* staff = new Employee[count];
-
-    staff[0].kod = 1;
-    strCopy(staff[0].ad, "Kamran");
-    strCopy(staff[0].soyad, "Bagirov");
-    staff[0].yas = 30;
-    staff[0].maas = 2300;
-    strCopy(staff[0].nomre, "+994709871234");
-
-    staff[1].kod = 2;
-    strCopy(staff[1].ad, "Sevinc");
-    strCopy(staff[1].soyad, "Mustafayeva");
-    staff[1].yas = 25;
-    staff[1].maas = 1650;
-    strCopy(staff[1].nomre, "+994559182345");
-
-    staff[2].kod = 3;
-    strCopy(staff[2].ad, "Orxan");
-    strCopy(staff[2].soyad, "Ibrahimov");
-    staff[2].yas = 33;
-    staff[2].maas = 2750;
-    strCopy(staff[2].nomre, "+994779293456");
-
-    staff[3].kod = 4;
-    strCopy(staff[3].ad, "Gulnar");
-    strCopy(staff[3].soyad, "Nasibova");
-    staff[3].yas = 27;
-    staff[3].maas = 1500;
-    strCopy(staff[3].nomre, "+994509384567");
-
-    staff[4].kod = 5;
-    strCopy(staff[4].ad, "Ruslan");
-    strCopy(staff[4].soyad, "Ceferov");
-    staff[4].yas = 29;
-    staff[4].maas = 2050;
-    strCopy(staff[4].nomre, "+994709475678");
-
-    return staff;
-}
-
-Muessise* buildCompany(Employee* staff, size_t count) {
-    Muessise* comp = new Muessise;
-    comp->kod = rand() % 100;
-    strCopy(comp->ad, "Absheron Solutions");
-    strCopy(comp->unvan, "Hasan Aliyev 45");
-    comp->heyat = staff;
-    comp->sayi = count;
-    return comp;
-}
-
-void printStaff(Employee* staff, size_t count) {
-    for (size_t i = 0; i < count; i++) {
-        cout << "Kod: " << staff[i].kod << " | " << staff[i].ad << " " << staff[i].soyad
-            << " | Maas: " << staff[i].maas << " | Tel: " << staff[i].nomre << endl;
+void showWorkers(Worker* isciler, size_t say) {
+    for (size_t i = 0; i < say; i++) {
+        cout << "ID: " << isciler[i].id
+            << " | " << isciler[i].name << " " << isciler[i].surname
+            << " | Yas: " << isciler[i].age
+            << " | Sheher: " << isciler[i].city
+            << " | Maas: " << isciler[i].salary
+            << " | Tel: " << isciler[i].phone << endl;
     }
 }
 
-void filterBySalary(Employee* staff, size_t count, float limit) {
-    cout << "\nMaasi " << limit << "-den cox olanlar:\n";
-    for (size_t i = 0; i < count; i++) {
-        if (staff[i].maas >= limit) {
-            cout << staff[i].ad << " " << staff[i].soyad << " - " << staff[i].maas << endl;
+Worker* createWorkers(size_t say) {
+    const char* adlar[]     = { "Nuray", "Medine", "Ismayil", "Nermin", "Tural", "Aytac", "Kamran", "Leyla" };
+    const char* soyadlar[]  = { "Quliyev", "Adigozelli", "Kerimova", "Eliyeva", "Mammadov", "Hasanov", "Rzayev", "Babayev" };
+    const char* sheherler[] = { "Baki", "Gence", "Sumqayit", "Lankaran", "Mingechevir", "Naxcivan" };
+    const char* prefiksler[]= { "+99450", "+99451", "+99455", "+99470", "+99477" };
+
+    Worker* yeniIsciler = new Worker[say];
+
+    for (size_t i = 0; i < say; i++) {
+        yeniIsciler[i].id = i + 1;
+        m_strcpy(yeniIsciler[i].name,    adlar[rand() % 8]);
+        m_strcpy(yeniIsciler[i].surname, soyadlar[rand() % 8]);
+        m_strcpy(yeniIsciler[i].city,    sheherler[rand() % 6]);
+        yeniIsciler[i].age    = 18 + rand() % 23;       // 18-40
+        yeniIsciler[i].salary = 800 + rand() % 2201;    // 800-3000
+
+        char tel[20];
+        m_strcpy(tel, prefiksler[rand() % 5]);
+        for (int j = 6; j < 13; j++) {
+            tel[j] = '0' + rand() % 10;
+        }
+        tel[13] = '\0';
+        m_strcpy(yeniIsciler[i].phone, tel);
+    }
+
+    return yeniIsciler;
+}
+
+Company* createCompany(Worker* isciler, size_t say) {
+    Company* c = new Company;
+    c->id = rand() % 100;
+    m_strcpy(c->name, "Omega & Go ");
+    m_strcpy(c->address, "Cellabad kucesi 92");
+    c->workers = isciler;
+    c->size = say;
+    return c;
+}
+
+void salaryGreaterThan(Worker* isciler, size_t say, float limitMaas) {
+    cout << "\nMaas " << limitMaas << "-dan cox olanlar\n";
+    for (size_t i = 0; i < say; i++) {
+        if (isciler[i].salary >= limitMaas) {
+            cout << isciler[i].name << " " << isciler[i].surname
+                << " - " << isciler[i].salary << endl;
         }
     }
 }
-
-void filterByOperator(Employee* staff, size_t count) {
-    cout << "\nNar istifadecileri:\n";
-    for (size_t i = 0; i < count; i++) {
-        if (strstr(staff[i].nomre, "+99470") != NULL || strstr(staff[i].nomre, "+99477") != NULL) {
-            cout << staff[i].ad << ": " << staff[i].nomre << endl;
+void checkNarPhoneNumber(Worker* isciler, size_t say) {
+    cout << "\nNar nomre istifadecileri:\n";
+    for (size_t i = 0; i < say; i++) {
+        if (strstr(isciler[i].phone, "+99470") != NULL ||
+            strstr(isciler[i].phone, "+99477") != NULL) {
+            cout << isciler[i].name << ": " << isciler[i].phone << endl;
         }
     }
 }
 
 int main() {
     srand(time(0));
-    size_t total = 5;
-
-    Employee* staff = buildStaff(total);
-    Muessise* comp = buildCompany(staff, total);
-
-    cout << "Muessise: " << comp->ad << endl;
-    printStaff(comp->heyat, comp->sayi);
-
-    filterBySalary(staff, total, 1800);
-    filterByOperator(staff, total);
-
-    delete[] staff;
-    delete comp;
-
+    size_t isciSayi = 5;
+    Worker* butunIsciler = createWorkers(isciSayi);
+    Company* sirket = createCompany(butunIsciler, isciSayi);
+    cout << "Sirket: " << sirket->name << "\nUnvan: " << sirket->address << "\n\n";
+    showWorkers(sirket->workers, sirket->size);
+    salaryGreaterThan(butunIsciler, isciSayi, 1300);
+    checkNarPhoneNumber(butunIsciler, isciSayi);
+    delete[] butunIsciler;
+    delete sirket;
     return 0;
 }
